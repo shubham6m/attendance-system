@@ -3,7 +3,7 @@ const { google } = require('googleapis');
 const app = express();
 const port = process.env.PORT || 3000;
 const path = require("path");
-const serviceAccountKey = require("./attend.json")
+const serviceAccountKey = require("./public/attend.json")
 let fetch;
   //Use dynamic import to fix error
 import('node-fetch').then((module) => {
