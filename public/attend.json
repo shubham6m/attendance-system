@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "attendence-system-448406",
+  "private_key_id": "eaba878a7e4dfd659b1c5eae1593d72e035ca626",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDl2bChjLqLROoE\nJ+3mNuOwvXd+iiZq8A+lor53D0drArCDdhROvKQupo8Q5dYFyxuYPN9QQYbfBZ1m\nsZ//vOd9p4xirnrkL5s/vdke21y2f3Ga1fnRq3UqEUTa7ArxDiJ3PdKQMBjRGTOV\nkhd/PJmNdoquaSoinGxqUd3cvPbXG8Sj71N6oHHiKje/WQCnRg2s2M2wSrc/pmHW\nllDfiumh9QBXFRB1L0ojDapGYGeWj+qo6eTYa1qBSiUVUQnPo9zO5JRTQG1AXJPB\nDW/EnW0UKHuhe1xEmHBZz7PAJXDnUkbxGpE+nIvm0eshGwDDY+jv0Fcv2P+4qKTG\nee3AugDrAgMBAAECggEAFQnWml2LOvF/317YQ64v1nRBL8VCvEm6OkBUjAlLUYbZ\nfpmcROi3Y8hoZ/ThoNN1HyYoj+wE2v0PPzXFngmTFslIlu++3Ta4+x32ywBBKDiE\nvtYUcRXvOiktKEIFbl22LJFCvg0+TZqvl2KGjBA77drf2WmpgFQuXZJIwHT7aGI8\ng5BEoHg1mv5jmc7D6YniXwD0LryCCT9mXs0Z/QVf7UAUxP1G+V2Co/tvoqPvhjGi\nYGoSej0hrFnUezGrS1PDt3FPTSdCgxPP//LAxTu8gPIyegJlBZgOPCzwCw9Jj1CM\nTOueGCsw5SsW197bdG9BVOHs6Mb1foVTMa7Z7TtKoQKBgQD8JUx2uNAozFjOBUEI\nDZTve96ISjz9Zy+vJsgFPZc4eurMMDxomHgfEOhEgGsyX4kZuWFN1Dl9i05DGqEJ\na+fPTOfhPZInj15U4c5yCxEtEN1meXuU4SyH4njK87TU8ZtGjXi3iO/4QuK79+wX\n6uKRWpLqokhcdtezlBMGwGq9JwKBgQDpXSULf6iJXG7c1JDQPoQORyQg4Y6wUzIl\n4BS0sjIvtAqhL7FICoAk6zGXPvLldkBu3SKc3S1QlBPcEx7L4kRQ2yo3rIf95Uzd\nsccuxkWsx4uTo7kI4eyu/FqKrv5TElwz/jy4t0T4dF2EC6K7o6RRboWOPLaqMV15\nAZth2RwAnQKBgQCh2QM61ahv97MtEvxKQgWOr3EJBLYfZiOahwcvLfiqPWQHixLL\nhMreDgk5J0EnxWEIjRDjV01Lw6aJtkcV+BiE3PWeg9oT4JgJXiQY2fe9eKzUwTfN\nObhOxNUKWOKDKU6lO9v320NFlRFa3GnEdHXYHU5eo6pVB8evMmYAGHSrUwKBgCiT\nRHSqXqB7jN8iqoc6x3VAE10QOuIXpRmGy7LbZPR8Zni+NSHkiYFhz36PuGYDWJKu\nKm2B23YuOQHD5U/n6J7ybHW/rumLbAED/zD30neHPpKOHgcYWTHXuNpyMNA62gNE\nSkSHwRs+CGCEMWhUvKZYBCrGDbCr4qe+isjJmh/VAoGAWnIsRvWL3aahERA+7LBH\ncT176mYH/AcoLfuJwXExrlFNd5iEnfdkcioMK4fhVPqb+49knzJ8/BnWim4LKFpk\npsF/AP0+T/rFKcCvL19J3zRNsYfalDE0IT6UV1Mh08TSgBkOegBD/D+otwXnrjeg\nGzs2LXw3vxlWbOQ1Pj1ZquY=\n-----END PRIVATE KEY-----\n",
+  "client_email": "stakshism@attendence-system-448406.iam.gserviceaccount.com",
+  "client_id": "113916915078184484807",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/stakshism%40attendence-system-448406.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
