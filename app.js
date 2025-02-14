@@ -3,7 +3,6 @@ const { google } = require('googleapis');
 const app = express();
 const port = process.env.PORT || 3000;
 const path = require("path");
-const serviceAccountKey = require("./public/attend.json")
 let fetch;
   //Use dynamic import to fix error
 import('node-fetch').then((module) => {
@@ -20,9 +19,9 @@ app.get('/', (req, res) => {
  const SPREADSHEET_ID = '1pySIWHFMb30sjMIMkL0XUJdVx_P1RSPAtwHbfh3_fFI'; // Replace with your actual Spreadsheet ID
  // Authentication
  const auth = new google.auth.GoogleAuth({
- credentials: serviceAccountKey,
- scopes: ['https://www.googleapis.com/auth/spreadsheets'],
- });
+    credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
  async function getSheetData() {
  try {
  const sheetData = await sheets.spreadsheets.values.get({
