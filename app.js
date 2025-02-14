@@ -103,9 +103,9 @@ return res.status(400).json({ success: false, message: "User has already punched
 }
 const punchInTime = sheetData[userIndex][3];
 //Calculate total hour
-const totalHours = calculateHoursWorked(punchInTime, punchOutTime);
-await updateSheetRow(\`A\${userIndex + 1}:Z\${userIndex+1}\`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], punchOutTime, sheetData[userIndex][5], totalHours]);
-return res.json({success: true, message: "Punch out succesful.", totalHours});
+ const totalHours = calculateHoursWorked(punchInTime, punchOutTime);
+ await updateSheetRow(`A${userIndex + 1}:Z${userIndex+1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], punchOutTime, sheetData[userIndex][5], totalHours]);
+ return res.json({success: true, message: "Punch out succesful.", totalHours});
 } catch (error) {
 console.error("Error during punch out.", error);
 return res.status(500).json({ success: false, message: "Error during punch out. "+ error.message })
