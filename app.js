@@ -81,61 +81,60 @@ function getCurrentTime() {
 const currentTime = getCurrentTime()
 
 // API endpoints
-app.post('/punch-in', async (req, res) => {
-  const { employeeId, fullName, tasks, currentTime } = req.body;
+        app.post('/punch-in', async (req, res) => {
+            const { employeeId, fullName, tasks, currentTime, timezoneOffset } = req.body;
+            try {
+                const now = new Date();
+                const date = now.toLocaleDateString();
+            //Get time and date
+            const now = new Date();
+           const date = now.toLocaleDateString();
+           const punchInTime = currentTime;
 
-    try {
-        const now = new Date();
-        const date = now.toLocaleDateString();
-        const punchInTime = getCurrentTime(); // Use the consistent time format
+           const sheetData = await getSheetData();
+           // Check if the employeeId already exists.
+           const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
+           if(existingUser){
+               return res.json({ success: false, message: 'User already punched in.' });
+           }
 
-        const sheetData = await getSheetData();
-        const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
+           await updateSheetData([employeeId,fullName,date, punchInTime, "", tasks]);
+           return res.json({success: true, message: "Punch In Successful"});
 
-        if (existingUser) {
-            return res.json({ success: false, message: 'User already punched in.' });
-        }
+            } catch (error) {
+                console.error("Error during punch in.", error);
+                return res.status(500).json({ success: false, message: "Error during punch in. " + error.message })
+            }
+        });
 
-        await updateSheetData([employeeId, fullName, date, punchInTime, "", tasks]);
-        return res.json({ success: true, message: "Punch in Successfully, We appreciate your presence!!" });
+        app.post("/punch-out", async (req, res) => {
+            const { employeeId, fullName, finalReport, currentTime, timezoneOffset } = req.body;
 
-    } catch (error) {
-        console.error("Error during punch in.", error);
-        return res.status(500).json({ success: false, message: "Error during punch in. " + error.message })
-    }
-});
+            try {
+                const sheetData = await getSheetData();
+                const userIndex = sheetData.findIndex(row => row[0] === employeeId && row[2] === new Date().toLocaleDateString()); // Ensure date comparison
 
-app.post("/punch-out", async (req, res) => {
-    const { employeeId, fullName, finalReport, currentTime, timezoneOffset } = req.body;
+                if (userIndex === -1) {
+                    return res.status(400).json({ success: false, message: "User not logged in." });
+                }
 
-    try {
-        console.log("Punch Out Request:", { employeeId, fullName, finalReport, currentTime }); // Log request data
+                if (sheetData[userIndex][4]) {
+                    return res.status(400).json({ success: false, message: "User has already punched out." });
+                }
 
-        const sheetData = await getSheetData();
-        const userIndex = sheetData.findIndex(row => row[0] === employeeId && row[2] === new Date().toLocaleDateString()); // Ensure date comparison
+                const punchInTime = sheetData[userIndex][3];
+                const totalHours = calculateHoursWorked(punchInTime, currentTime);
 
-        if (userIndex === -1) {
-            return res.status(400).json({ success: false, message: "User not logged in." });
-        }
+                // Final Report in Column H
+                await updateSheetRow(`A${userIndex + 1}:H${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], currentTime, sheetData[userIndex][5], totalHours, finalReport]);
 
-        if (sheetData[userIndex][4]) {
-            return res.status(400).json({ success: false, message: "User has already punched out." });
-        }
+               return res.json({ success: true, message: "Punch out successful.", totalHours });
 
-        const punchInTime = sheetData[userIndex][3];
-        const totalHours = calculateHoursWorked(punchInTime, currentTime);
-
-        console.log("User Index:", userIndex); // Log user index
-        console.log("Final Report Value:", finalReport); // Log final report value
-
-        await updateSheetRow(`A${userIndex + 1}:Z${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], currentTime, sheetData[userIndex][5], totalHours, finalReport]);
-        return res.json({ success: true, message: "Punch out Successfully, Hope we meet soon!!", totalHours });
-
-    } catch (error) {
-        console.error("Error during punch out.", error);
-        return res.status(500).json({ success: false, message: "Error during punch out. " + error.message });
-    }
-});
+            } catch (error) {
+                console.error("Error during punch out.", error);
+                return res.status(500).json({ success: false, message: "Error during punch out. " + error.message });
+            }
+        });
 
 function calculateHoursWorked(punchInTime, punchOutTime) {
     if (!punchInTime || !punchOutTime) {
