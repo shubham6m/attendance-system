@@ -5,13 +5,14 @@
 This is a Node.js-based attendance tracking system that integrates with Google Sheets to record employee punch-in and punch-out times, along with their daily tasks. This system provides a simple and efficient way to manage employee attendance and track their work activities.
 
 ## Features
-
-*   **Punch-In/Punch-Out:** Allows employees to record their start and end times for the workday.
-*   **Task Tracking:** Enables employees to specify the tasks they worked on during the day.
-*   **Google Sheets Integration:** Automatically records attendance data in a Google Sheet for easy access and reporting.
-*   **Calculates Total Hours:**  Calculates the total hours worked based on punch-in and punch-out times.
-*   **Simple API Endpoints:** Provides API endpoints for punch-in and punch-out functionality.
-
+https://github.com/shubham6m/attendance-system/edit/main/README.md
+*   **Employee Login:** Allows employees to log in with their ID and full name.
+*   **Punch In/Out:** Records the time when an employee starts and ends their work.
+*   **Task Tracking:** Allows employees to enter the tasks they are working on.
+*   **Total Hours Worked:** Automatically calculates the total hours worked between punch-in and punch-out.
+*   **Dark Mode:** Offers a dark mode option for improved user experience.
+*   **Data Storage:** Uses Google Sheets to store attendance records.
+  
 ## Technologies Used
 
 *   Node.js
@@ -67,6 +68,20 @@ Make sure all this in single quote.
 5.  **Create a Google Sheet:**
 
     *   Create a new Google Sheet to store the attendance data.
+
+* Ensure your Google Sheet has the following headers in the first row:
+
+| Column | Header          |
+| :----- | :-------------- |
+| A      | Employee ID     |
+| B      | Name            |
+| C      | Date            |
+| D      | Punch In time   |
+| E      | Punch Out time  |
+| F      | Task            |
+| G      | Total hours worked|
+
+Format the columns to Plain Text.
     *   Share the sheet with the service account's email address (e.g., `stakshism@attendence-system-448406.iam.gserviceaccount.com`) and grant it "Editor" permission.
     *   Copy the Spreadsheet ID from the URL of your Google Sheet.  The URL will look something like this: `https://docs.google.com/spreadsheets/d/<SPREADSHEET_ID>/edit`
 
@@ -92,3 +107,8 @@ Make sure all this in single quote.
     ```
 
     The server will start running on `http://localhost:3000` (or the port specified in your `.env` file).
+
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit pull requests or open issues to suggest improvements.

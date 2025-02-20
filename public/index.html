@@ -18,16 +18,13 @@
    </div>
 
     <div class="container">
-        <h1>Welcome to KPB Supports Solutions</h1>
-        <h4>Employee Attendance System</h4>
+        <h1>Employee Attendance System</h1>
 
-        <div id="initialOptions">
-            <button id="punchInBtn">Punch In</button>
-            <button id="punchOutBtn">Punch Out</button>
+        <div id="loginOptions">
+            <button id="employeeLoginBtn">Employee Login</button>
         </div>
-
         <div id="employeeForm" class="hidden">
-            <h4>Mark your Attendance</h4>
+            <h2>Employee Attendance Form</h2>
             <form id="attendanceForm">
                 <label for="employeeId">Employee ID:</label>
                 <input type="text" id="employeeId" name="employeeId" required><br><br>
@@ -38,30 +35,30 @@
                 <label for="tasks">Today's Tasks:</label>
                 <textarea id="tasks" name="tasks" rows="4" cols="50"></textarea><br><br>
 
-                <button type="button" id="submitPunchIn">Submit</button>
+                <button type="button" id="punchIn">Punch In</button>
+                <button type="button" id="punchOut">Punch Out</button>
             </form>
-        </div>
+            <div id="statusMessage" class="message"></div>
 
-        <div id="employeeOutForm" class="hidden">
-            <h2>Yeah!! You complete today's task</h2>
-            <form id="attendanceOutForm">
-                <label for="employeeIdOut">Employee ID:</label>
-                <input type="text" id="employeeIdOut" name="employeeId" required><br><br>
-
-                <label for="fullNameOut">Full Name:</label>
-                <input type="text" id="fullNameOut" name="fullName" required><br><br>
-
-                <label for="finalReport">Final Report:</label>
-                <textarea id="finalReport" name="finalReport" rows="4" cols="50"></textarea><br><br>
-
-                <button type="button" id="submitPunchOut">Submit</button>
-            </form>
-        </div>
+                <p class="liw">Connect with us on</p>
+                <div class="icons">
+                    <a href="https://www.linkedin.com/company/kpbsupportssolutions/"><ion-icon name="logo-linkedin"></ion-icon></a>
+                    <a href="https://www.facebook.com/people/KPB-Solutions/61552608755485/"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="https://www.instagram.com/kpbsupportssolutions/"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="https://x.com/Kpbssolutions"><ion-icon name="logo-twitter"></ion-icon></a>
+                    <a href="https://www.youtube.com/@KPBSupportsSolutions"><ion-icon name="logo-youtube"></ion-icon></a>
+                </div>
 
         <div id="statusMessage" class=""></div>
-    </div>
 
-    <script src="./js/main.js"></script>
-    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+        <div class="darkModeToggle">
+            <label class="switch">
+                <input type="checkbox" id="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <span class="darkModeText">Dark Mode</span>
+        </div>
+    </div>
+    <script src="main.js"></script>
 </body>
 </html>

@@ -69,17 +69,27 @@ async function updateSheetRow(range, data) {
     }
 }
 
+<<<<<<< HEAD
+=======
 // Helper function to format the current time as HH:mm:ss
 function getCurrentTime() {
-  const now = new Date();
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  return `${hours}:${minutes}:${seconds}`;
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
 }
+
+// Add timezone offset for India Standard Time (IST)
+function getTimezoneOffset() {
+    return -new Date().getTimezoneOffset() * 60;
+}
+
 //When punch-in or punch-out button are pressed, get the current time using the function
 const currentTime = getCurrentTime()
+const timezoneOffset = getTimezoneOffset();
 
+>>>>>>> a10ef7fad72241085f4c06e819e6b193493867ca
 // API endpoints
 app.post('/punch-in', async (req, res) => {
   const { employeeId, fullName, tasks, currentTime } = req.body;

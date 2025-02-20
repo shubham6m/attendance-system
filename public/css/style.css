@@ -262,14 +262,3 @@ button:hover {
 .checkbox:checked + .checkbox-label .ball {
   transform: translateX(24px);
 }
-
-#initialOptions {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#initialOptions button {
-    margin: 0 10px; /* Add some horizontal spacing between buttons */
-    padding: 10px 20px; /* Adjust padding as needed */
-    font-size: 16px; /* Adjust font size as needed */
-}
