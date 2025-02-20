@@ -69,34 +69,26 @@ async function updateSheetRow(range, data) {
     }
 }
 
-<<<<<<< HEAD
-=======
 // Helper function to format the current time as HH:mm:ss
 function getCurrentTime() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  return `${hours}:${minutes}:${seconds}`;
 }
-
-// Add timezone offset for India Standard Time (IST)
-function getTimezoneOffset() {
-    return -new Date().getTimezoneOffset() * 60;
-}
-
 //When punch-in or punch-out button are pressed, get the current time using the function
 const currentTime = getCurrentTime()
-const timezoneOffset = getTimezoneOffset();
 
->>>>>>> a10ef7fad72241085f4c06e819e6b193493867ca
 // API endpoints
 app.post('/punch-in', async (req, res) => {
-    const { employeeId, fullName, tasks, currentTime, timezoneOffset } = req.body;
+  const { employeeId, fullName, tasks, currentTime } = req.body;
 
     try {
         const now = new Date();
         const date = now.toLocaleDateString();
+        const punchInTime = getCurrentTime(); // Use the consistent time format
+
         const sheetData = await getSheetData();
         const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
 
@@ -104,7 +96,7 @@ app.post('/punch-in', async (req, res) => {
             return res.json({ success: false, message: 'User already punched in.' });
         }
 
-        await updateSheetData([employeeId, fullName, date, currentTime, "", tasks]);
+        await updateSheetData([employeeId, fullName, date, punchInTime, "", tasks]);
         return res.json({ success: true, message: "Punch In Successful" });
 
     } catch (error) {
@@ -114,9 +106,10 @@ app.post('/punch-in', async (req, res) => {
 });
 
 app.post("/punch-out", async (req, res) => {
-    const { employeeId, fullName, tasks, currentTime, timezoneOffset } = req.body;
+    const { employeeId, fullName, tasks } = req.body;
 
     try {
+        const punchOutTime = getCurrentTime(); // Consistent time format
         const sheetData = await getSheetData();
         const userIndex = sheetData.findIndex(row => row[0] === employeeId && row[2] === new Date().toLocaleDateString()); // Ensure date comparison
 
@@ -129,9 +122,9 @@ app.post("/punch-out", async (req, res) => {
         }
 
         const punchInTime = sheetData[userIndex][3];
-        const totalHours = calculateHoursWorked(punchInTime, currentTime);
+        const totalHours = calculateHoursWorked(punchInTime, punchOutTime);
 
-        await updateSheetRow(`A${userIndex + 1}:Z${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], currentTime, sheetData[userIndex][5], totalHours]);
+        await updateSheetRow(`A${userIndex + 1}:Z${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], punchOutTime, sheetData[userIndex][5], totalHours]);
         return res.json({ success: true, message: "Punch out successful.", totalHours });
 
     } catch (error) {
