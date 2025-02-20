@@ -71,7 +71,7 @@ async function updateSheetRow(range, data) {
 
 // Helper function to format the current time as HH:mm:ss
 function getCurrentTime() {
-  // const now = new Date();
+  const now = new Date();
   const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
