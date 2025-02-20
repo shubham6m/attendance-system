@@ -32,9 +32,9 @@ document.getElementById('submitPunchIn').addEventListener('click', async ()=>{
   const fullName = document.getElementById('fullName').value;
   const tasks = document.getElementById('tasks').value;
 
-    if(!employeeId || !fullName || !tasks){
+    if(!employeeId || !fullName){
       const statusMessageDiv = document.getElementById('statusMessage');
-      statusMessageDiv.textContent = "Employee ID/Full Name/Today's Tasks is required.";
+      statusMessageDiv.textContent = "Employee ID and Full Name are required.";
       statusMessageDiv.classList.remove('success');
       statusMessageDiv.classList.add('error');
       return;
@@ -80,9 +80,9 @@ document.getElementById('submitPunchOut').addEventListener('click', async ()=>{
   const fullName = document.getElementById('fullNameOut').value;
   const finalReport = document.getElementById('finalReport').value;
 
-    if(!employeeId || !fullName || !finalReport){
+    if(!employeeId || !fullName){
       const statusMessageDiv = document.getElementById('statusMessage');
-      statusMessageDiv.textContent = "Employee ID/Full Name/Today's Report is required.";
+      statusMessageDiv.textContent = "Employee ID and Full Name are required.";
       statusMessageDiv.classList.remove('success');
       statusMessageDiv.classList.add('error');
       return;
