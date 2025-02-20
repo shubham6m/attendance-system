@@ -71,16 +71,18 @@ async function updateSheetRow(range, data) {
 
 // Helper function to format the current time as HH:mm:ss
 function getCurrentTime() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  return `${hours}:${minutes}:${seconds}`;
 }
+//When punch-in or punch-out button are pressed, get the current time using the function
+const currentTime = getCurrentTime()
 
 // API endpoints
 app.post('/punch-in', async (req, res) => {
-    const { employeeId, fullName, tasks } = req.body;
+  const { employeeId, fullName, tasks, currentTime } = req.body;
 
     try {
         const now = new Date();
