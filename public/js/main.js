@@ -6,6 +6,19 @@ document.getElementById('employeeLoginBtn').addEventListener('click', ()=>{
     employeeFormDiv.classList.remove('hidden');
 });
 
+// Helper Functions for Time
+function getCurrentTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+function getTimezoneOffset() {
+    return -new Date().getTimezoneOffset() * 60;
+}
+
 document.getElementById('punchIn').addEventListener('click', async ()=>{
   const employeeId = document.getElementById('employeeId').value;
   const fullName = document.getElementById('fullName').value;
@@ -18,6 +31,9 @@ document.getElementById('punchIn').addEventListener('click', async ()=>{
       statusMessageDiv.classList.add('error');
       return;
   }
+    // Get time and timezone
+    const currentTime = getCurrentTime();
+    const timezoneOffset = getTimezoneOffset();
 
   try{
      const response = await fetch("/punch-in", {
@@ -25,7 +41,7 @@ document.getElementById('punchIn').addEventListener('click', async ()=>{
            headers: {
                  'Content-Type': 'application/json'
            },
-           body: JSON.stringify({employeeId, fullName, tasks })
+           body: JSON.stringify({employeeId, fullName, tasks, currentTime, timezoneOffset })
       });
      const data = await response.json();
 
@@ -60,6 +76,9 @@ document.getElementById('punchOut').addEventListener('click', async ()=>{
       statusMessageDiv.classList.add('error');
       return;
   }
+     // Get time and timezone
+    const currentTime = getCurrentTime();
+    const timezoneOffset = getTimezoneOffset();
 
   try{
      const response = await fetch("/punch-out", {
@@ -67,7 +86,7 @@ document.getElementById('punchOut').addEventListener('click', async ()=>{
           headers: {
              'Content-Type': 'application/json'
           },
-          body: JSON.stringify({employeeId, fullName, tasks })
+          body: JSON.stringify({employeeId, fullName, tasks, currentTime, timezoneOffset })
       });
     const data = await response.json();
     const statusMessageDiv = document.getElementById('statusMessage');
