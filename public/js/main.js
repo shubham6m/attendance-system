@@ -1,9 +1,17 @@
-const loginOptionsDiv = document.getElementById('loginOptions');
+const initialOptionsDiv = document.getElementById('initialOptions');
 const employeeFormDiv = document.getElementById('employeeForm');
+const employeeOutFormDiv = document.getElementById('employeeOutForm');
 
-document.getElementById('employeeLoginBtn').addEventListener('click', ()=>{
-    loginOptionsDiv.classList.add('hidden');
+document.getElementById('punchInBtn').addEventListener('click', ()=>{
+    initialOptionsDiv.classList.add('hidden');
     employeeFormDiv.classList.remove('hidden');
+    employeeOutFormDiv.classList.add('hidden');
+});
+
+document.getElementById('punchOutBtn').addEventListener('click', ()=>{
+    initialOptionsDiv.classList.add('hidden');
+    employeeFormDiv.classList.add('hidden');
+    employeeOutFormDiv.classList.remove('hidden');
 });
 
 // Helper Functions for Time
@@ -19,14 +27,14 @@ function getTimezoneOffset() {
     return -new Date().getTimezoneOffset() * 60;
 }
 
-document.getElementById('punchIn').addEventListener('click', async ()=>{
+document.getElementById('submitPunchIn').addEventListener('click', async ()=>{
   const employeeId = document.getElementById('employeeId').value;
   const fullName = document.getElementById('fullName').value;
   const tasks = document.getElementById('tasks').value;
 
-    if(!employeeId || !fullName){
+    if(!employeeId || !fullName || !tasks){
       const statusMessageDiv = document.getElementById('statusMessage');
-      statusMessageDiv.textContent = "Employee ID and Full Name are required.";
+      statusMessageDiv.textContent = "Employee ID/Full Name/Today's Tasks is required.";
       statusMessageDiv.classList.remove('success');
       statusMessageDiv.classList.add('error');
       return;
@@ -50,7 +58,10 @@ document.getElementById('punchIn').addEventListener('click', async ()=>{
     if(data.success){
        statusMessageDiv.classList.remove('error');
        statusMessageDiv.classList.add('success');
-        document.getElementById("attendanceForm").reset()
+       document.getElementById("attendanceForm").reset()
+       // Show initial option
+       initialOptionsDiv.classList.remove('hidden');
+       employeeFormDiv.classList.add('hidden');
       }else{
          statusMessageDiv.classList.remove('success');
         statusMessageDiv.classList.add('error');
@@ -64,14 +75,14 @@ document.getElementById('punchIn').addEventListener('click', async ()=>{
     }
 });
 
-document.getElementById('punchOut').addEventListener('click', async ()=>{
- const employeeId = document.getElementById('employeeId').value;
-  const fullName = document.getElementById('fullName').value;
-  const tasks = document.getElementById('tasks').value;
+document.getElementById('submitPunchOut').addEventListener('click', async ()=>{
+ const employeeId = document.getElementById('employeeIdOut').value;
+  const fullName = document.getElementById('fullNameOut').value;
+  const finalReport = document.getElementById('finalReport').value;
 
-    if(!employeeId || !fullName){
+    if(!employeeId || !fullName || !finalReport){
       const statusMessageDiv = document.getElementById('statusMessage');
-      statusMessageDiv.textContent = "Employee ID and Full Name are required.";
+      statusMessageDiv.textContent = "Employee ID/Full Name/Today's Report is required.";
       statusMessageDiv.classList.remove('success');
       statusMessageDiv.classList.add('error');
       return;
@@ -86,7 +97,7 @@ document.getElementById('punchOut').addEventListener('click', async ()=>{
           headers: {
              'Content-Type': 'application/json'
           },
-          body: JSON.stringify({employeeId, fullName, tasks, currentTime, timezoneOffset })
+          body: JSON.stringify({employeeId, fullName, finalReport, currentTime, timezoneOffset })
       });
     const data = await response.json();
     const statusMessageDiv = document.getElementById('statusMessage');
@@ -95,7 +106,11 @@ document.getElementById('punchOut').addEventListener('click', async ()=>{
          statusMessageDiv.classList.remove('error');
          statusMessageDiv.classList.add('success');
          statusMessageDiv.textContent = data.message + `Total Hours Worked: ${data.totalHours}`;
-          document.getElementById("attendanceForm").reset()
+          document.getElementById("attendanceOutForm").reset()
+
+           // Show initial option
+           initialOptionsDiv.classList.remove('hidden');
+           employeeOutFormDiv.classList.add('hidden');
       }else{
           statusMessageDiv.classList.remove('success');
          statusMessageDiv.classList.add('error');

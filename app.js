@@ -106,10 +106,11 @@ app.post('/punch-in', async (req, res) => {
 });
 
 app.post("/punch-out", async (req, res) => {
-    const { employeeId, fullName, tasks } = req.body;
+    const { employeeId, fullName, finalReport, currentTime, timezoneOffset } = req.body;
 
     try {
-        const punchOutTime = getCurrentTime(); // Consistent time format
+        console.log("Punch Out Request:", { employeeId, fullName, finalReport, currentTime }); // Log request data
+
         const sheetData = await getSheetData();
         const userIndex = sheetData.findIndex(row => row[0] === employeeId && row[2] === new Date().toLocaleDateString()); // Ensure date comparison
 
@@ -122,9 +123,12 @@ app.post("/punch-out", async (req, res) => {
         }
 
         const punchInTime = sheetData[userIndex][3];
-        const totalHours = calculateHoursWorked(punchInTime, punchOutTime);
+        const totalHours = calculateHoursWorked(punchInTime, currentTime);
 
-        await updateSheetRow(`A${userIndex + 1}:Z${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], punchOutTime, sheetData[userIndex][5], totalHours]);
+        // console.log("User Index:", userIndex); // Log user index
+        // console.log("Final Report Value:", finalReport); // Log final report value
+
+        await updateSheetRow(`A${userIndex + 1}:Z${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], currentTime, sheetData[userIndex][5], totalHours, finalReport]);
         return res.json({ success: true, message: "Punch out successful.", totalHours });
 
     } catch (error) {
