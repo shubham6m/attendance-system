@@ -92,3 +92,109 @@ Make sure all this in single quote.
     ```
 
     The server will start running on `http://localhost:3000` (or the port specified in your `.env` file).
+
+
+
+# Employee Attendance System
+
+This is a simple employee attendance system built with HTML, CSS, JavaScript for the front end, and Node.js with Express for the back end. It uses Google Sheets as a data store via the Google Sheets API.
+
+## Features
+
+*   **Employee Login:** Allows employees to log in with their ID and full name.
+*   **Punch In/Out:** Records the time when an employee starts and ends their work.
+*   **Task Tracking:** Allows employees to enter the tasks they are working on.
+*   **Total Hours Worked:** Automatically calculates the total hours worked between punch-in and punch-out.
+*   **Dark Mode:** Offers a dark mode option for improved user experience.
+*   **Data Storage:** Uses Google Sheets to store attendance records.
+
+## Technologies Used
+
+*   **Frontend:**
+    *   HTML
+    *   CSS
+    *   JavaScript
+*   **Backend:**
+    *   Node.js
+    *   Express
+*   **API:**
+    *   Google Sheets API
+
+## Prerequisites
+
+Before running this application, you need to have the following installed:
+
+*   **Node.js:** Make sure Node.js is installed on your machine. You can download it from [nodejs.org](https://nodejs.org/).
+*   **NPM (Node Package Manager):** NPM comes with Node.js, so you should have it installed automatically.
+*   **Google Cloud Project:**  A Google Cloud Project with the Google Sheets API enabled.
+*   **Google Service Account:**  A service account with credentials to access the Google Sheets API.
+*   **Google Sheet:** A Google Sheet to store the attendance data.
+
+## Setup
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone [repository-url]
+    cd [repository-directory]
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Set up Google Sheets API:**
+
+    *   Enable the Google Sheets API in your Google Cloud project.
+    *   Create a service account and download the JSON key file.
+    *   Share your Google Sheet with the service account's email address and give it edit permissions.
+
+4.  **Configure environment variables:**
+
+    Create a `.env` file in the root directory and add the following environment variables:
+
+    ```
+    SPREADSHEET_ID=[your-spreadsheet-id]
+    GOOGLE_APPLICATION_CREDENTIALS='[JSON string of your service account credentials file]'
+    PORT=3000 # Optional: Set a custom port
+    ```
+
+    *   Replace `[your-spreadsheet-id]` with the ID of your Google Sheet. You can find it in the URL of your Google Sheet.
+    *   Replace `[JSON string of your service account credentials file]` with the JSON string of your service account credentials file.  **Important:**  Make sure this is a single-line string.  You can achieve this by reading the file content and stringifying it in your application or using a tool to convert the JSON to a single-line string.
+
+5.  **Run the application:**
+
+    ```bash
+    npm start
+    ```
+
+    This will start the server, and you can access the application in your browser at `http://localhost:3000`.
+
+## Google Sheet Setup
+
+Ensure your Google Sheet has the following headers in the first row:
+
+| Column | Header          |
+| :----- | :-------------- |
+| A      | Employee ID     |
+| B      | Name            |
+| C      | Date            |
+| D      | Punch In time   |
+| E      | Punch Out time  |
+| F      | Task            |
+| G      | Total hours worked|
+
+Format the columns to Plain Text.
+
+## Important Notes
+
+*   **Timezones:** This application assumes that the server and users are in the same timezone. For production applications with users in different timezones, you need to implement proper timezone handling using a library like `date-fns-tz` or `luxon`.
+*   **Error Handling:** The error handling is basic. Consider adding more robust error handling and logging for production use.
+*   **Security:** This is a basic example and may not be suitable for production environments without additional security measures.
+*   **API Usage:** Be mindful of Google Sheets API usage limits.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit pull requests or open issues to suggest improvements.
