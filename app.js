@@ -128,7 +128,7 @@ const currentTime = getCurrentTime()
                 // Final Report in Column H
                 await updateSheetRow(`A${userIndex + 1}:H${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], currentTime, sheetData[userIndex][5], totalHours, finalReport]);
 
-               return res.json({ success: true, message: "Punch out successful.", totalHours });
+               return res.json({ success: true, message: "Punch out successful. ", totalHours });
 
             } catch (error) {
                 console.error("Error during punch out.", error);
