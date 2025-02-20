@@ -58,7 +58,7 @@ document.getElementById('submitPunchIn').addEventListener('click', async ()=>{
     if(data.success){
        statusMessageDiv.classList.remove('error');
        statusMessageDiv.classList.add('success');
-       document.getElementById("attendanceForm").reset()
+        document.getElementById("attendanceForm").reset()
        // Show initial option
        initialOptionsDiv.classList.remove('hidden');
        employeeFormDiv.classList.add('hidden');
