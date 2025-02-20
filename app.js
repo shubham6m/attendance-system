@@ -71,7 +71,7 @@ async function updateSheetRow(range, data) {
 
 // Helper function to format the current time as HH:mm:ss
 function getCurrentTime() {
-  const now = new Date();
+  // const now = new Date();
   const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
@@ -80,33 +80,29 @@ function getCurrentTime() {
 //When punch-in or punch-out button are pressed, get the current time using the function
 const currentTime = getCurrentTime()
 
-// API endpoints
-        app.post('/punch-in', async (req, res) => {
-            const { employeeId, fullName, tasks, currentTime, timezoneOffset } = req.body;
-            try {
-                const now = new Date();
-                const date = now.toLocaleDateString();
-            //Get time and date
-            const now = new Date();
-           const date = now.toLocaleDateString();
-           const punchInTime = currentTime;
+/app.post('/punch-in', async (req, res) => {
+  const { employeeId, fullName, tasks, currentTime } = req.body;
 
-           const sheetData = await getSheetData();
-           // Check if the employeeId already exists.
-           const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
-           if(existingUser){
-               return res.json({ success: false, message: 'User already punched in.' });
-           }
+    try {
+        const now = new Date();
+        const date = now.toLocaleDateString();
+        const punchInTime = getCurrentTime(); // Use the consistent time format
 
-           await updateSheetData([employeeId,fullName,date, punchInTime, "", tasks]);
-           return res.json({success: true, message: "Punch In Successful"});
+        const sheetData = await getSheetData();
+        const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
 
-            } catch (error) {
-                console.error("Error during punch in.", error);
-                return res.status(500).json({ success: false, message: "Error during punch in. " + error.message })
-            }
-        });
+        if (existingUser) {
+            return res.json({ success: false, message: 'User already punched in.' });
+        }
 
+        await updateSheetData([employeeId, fullName, date, punchInTime, "", tasks]);
+        return res.json({ success: true, message: "Punch In Successful" });
+
+    } catch (error) {
+        console.error("Error during punch in.", error);
+        return res.status(500).json({ success: false, message: "Error during punch in. " + error.message })
+    }
+});
         app.post("/punch-out", async (req, res) => {
             const { employeeId, fullName, finalReport, currentTime, timezoneOffset } = req.body;
 
