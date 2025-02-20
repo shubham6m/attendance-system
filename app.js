@@ -97,7 +97,7 @@ app.post('/punch-in', async (req, res) => {
         }
 
         await updateSheetData([employeeId, fullName, date, punchInTime, "", tasks]);
-        return res.json({ success: true, message: "Punch In Successful" });
+        return res.json({ success: true, message: "Punch in Successfully, We appreciate your presence!!" });
 
     } catch (error) {
         console.error("Error during punch in.", error);
@@ -129,7 +129,7 @@ app.post("/punch-out", async (req, res) => {
         console.log("Final Report Value:", finalReport); // Log final report value
 
         await updateSheetRow(`A${userIndex + 1}:Z${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], currentTime, sheetData[userIndex][5], totalHours, finalReport]);
-        return res.json({ success: true, message: "Punch out successful.", totalHours });
+        return res.json({ success: true, message: "Punch out Successfully, Hope we meet soon!!", totalHours });
 
     } catch (error) {
         console.error("Error during punch out.", error);
