@@ -1,92 +1,111 @@
 const express = require('express');
 const { google } = require('googleapis');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const path = require("path");
-const serviceAccountKey = require("./attend.json")
+
 let fetch;
-  //Use dynamic import to fix error
+
 import('node-fetch').then((module) => {
     fetch = module.default;
 });
-  //Middleware
+
 app.use(express.static('public'));
 app.use(express.json());
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
- // Set up Google Sheets API client
- const sheets = google.sheets({version: 'v4'});
- const SPREADSHEET_ID = '1pySIWHFMb30sjMIMkL0XUJdVx_P1RSPAtwHbfh3_fFI'; // Replace with your actual Spreadsheet ID
- // Authentication
- const auth = new google.auth.GoogleAuth({
- credentials: serviceAccountKey,
- scopes: ['https://www.googleapis.com/auth/spreadsheets'],
- });
- async function getSheetData() {
- try {
- const sheetData = await sheets.spreadsheets.values.get({
- auth,
- spreadsheetId: SPREADSHEET_ID,
- range: 'A1:Z'
- });
- return sheetData.data.values;
- } catch (error) {
- console.error('Error getting sheet data', error);
- throw new Error('Error getting sheet data: ' + error.message)
- }
- }
- async function updateSheetData(data) {
- try {
- await sheets.spreadsheets.values.append({
- auth,
- spreadsheetId: SPREADSHEET_ID,
- range: 'A1:Z',
- valueInputOption: 'USER_ENTERED',
- resource: { values: [data] }
- });
- } catch (error) {
- console.error('Error updating sheet data', error);
- throw new Error('Error updating sheet data:'+ error.message)
- }
- }
- async function updateSheetRow(range, data) {
- try{
- await sheets.spreadsheets.values.update({
- auth,
- spreadsheetId: SPREADSHEET_ID,
- range: range,
- valueInputOption: 'USER_ENTERED',
- resource:{ values: [data] }
- })
- } catch (error) {
- console.error('Error updating sheet data', error);
- throw new Error('Error updating sheet data:'+ error.message)
- }
- }
- // API endpoints
- app.post('/punch-in', async (req, res) => {
- const { employeeId, fullName, tasks } = req.body;
- try {
- // Get time and date
- const now = new Date();
- const date = now.toLocaleDateString();
- const punchInTime = now.toLocaleTimeString();
- const sheetData = await getSheetData();
- // Check if the employeeId already exists.
- const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
- if(existingUser){
- return res.json({ success: false, message: 'User already punched in.' });
- }
- await updateSheetData([employeeId,fullName,date, punchInTime, "", tasks]);
- return res.json({success: true, message: "Punch In Successful"});
- } catch (error) {
- console.error("Error during punch in.", error);
- return res.status(500).json({success: false, message: "Error during punch in. "+ error.message})
- }
- });
- 
- app.post("/punch-out", async (req, res) => {
+
+const sheets = google.sheets({ version: 'v4' });
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+
+const auth = new google.auth.GoogleAuth({
+    credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+
+async function getSheetData() {
+    try {
+        const sheetData = await sheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: SPREADSHEET_ID,
+            range: 'A1:Z'
+        });
+        return sheetData.data.values;
+    } catch (error) {
+        console.error('Error getting sheet data', error);
+        throw new Error('Error getting sheet data: ' + error.message)
+    }
+}
+
+async function updateSheetData(data) {
+    try {
+        await sheets.spreadsheets.values.append({
+            auth,
+            spreadsheetId: SPREADSHEET_ID,
+            range: 'A1:Z',
+            valueInputOption: 'USER_ENTERED',
+            resource: { values: [data] }
+        });
+    } catch (error) {
+        console.error('Error updating sheet data', error);
+        throw new Error('Error updating sheet data:' + error.message)
+    }
+}
+
+async function updateSheetRow(range, data) {
+    try {
+        await sheets.spreadsheets.values.update({
+            auth,
+            spreadsheetId: SPREADSHEET_ID,
+            range: range,
+            valueInputOption: 'USER_ENTERED',
+            resource: { values: [data] }
+        })
+    } catch (error) {
+        console.error('Error updating sheet data', error);
+        throw new Error('Error updating sheet data:' + error.message)
+    }
+}
+
+// Helper function to format the current time as HH:mm:ss
+function getCurrentTime() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  return `${hours}:${minutes}:${seconds}`;
+}
+//When punch-in or punch-out button are pressed, get the current time using the function
+const currentTime = getCurrentTime()
+
+// API endpoints
+app.post('/punch-in', async (req, res) => {
+  const { employeeId, fullName, tasks, currentTime } = req.body;
+
+    try {
+        const now = new Date();
+        const date = now.toLocaleDateString();
+        const punchInTime = getCurrentTime(); // Use the consistent time format
+
+        const sheetData = await getSheetData();
+        const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
+
+        if (existingUser) {
+            return res.json({ success: false, message: 'User already punched in.' });
+        }
+
+        await updateSheetData([employeeId, fullName, date, punchInTime, "", tasks]);
+        return res.json({ success: true, message: "Punch In Successful" });
+
+    } catch (error) {
+        console.error("Error during punch in.", error);
+        return res.status(500).json({ success: false, message: "Error during punch in. " + error.message })
+    }
+});
+
+app.post("/punch-out", async (req, res) => {
     const { employeeId, fullName, finalReport, currentTime, timezoneOffset } = req.body;
 
     try {
@@ -119,64 +138,37 @@ app.get('/', (req, res) => {
 });
 
 function calculateHoursWorked(punchInTime, punchOutTime) {
-     if (!punchInTime || !punchOutTime) {
-         return '00:00:00 hours';
-     }
- 
-     let formattedPunchOutTime = punchOutTime;
-     if(formattedPunchOutTime.toLowerCase().includes('pm')){
-          const [time, modifier] = formattedPunchOutTime.split(" ");
-         let [hours, minutes, seconds] = time.split(":").map(Number);
-          if(hours !== 12){
-             hours = hours+ 12;
-         }
-        formattedPunchOutTime = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
- 
-     }else if(formattedPunchOutTime.toLowerCase().includes('am')){
-           const [time, modifier] = formattedPunchOutTime.split(" ");
-        let [hours, minutes, seconds] = time.split(":").map(Number);
-           if(hours === 12){
-               hours = 0;
-           }
-             formattedPunchOutTime = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-     }
- 
-     const timeRegex = /^(\d{1,2}):(\d{2}):(\d{2})$/;
-     const inMatch = String(punchInTime).match(timeRegex);
-     const outMatch = String(formattedPunchOutTime).match(timeRegex);
- 
-    if (!inMatch || !outMatch) {
-          return '00:00:00 hours';
-     }
-    const inHours = Number(inMatch[1]);
-     const inMinutes = Number(inMatch[2]);
-     const inSeconds = Number(inMatch[3]);
-      const outHours = Number(outMatch[1]);
-      const outMinutes = Number(outMatch[2]);
-     const outSeconds = Number(outMatch[3]);
- 
-     const inTimeInSeconds = inHours * 3600 + inMinutes * 60 + inSeconds;
-     const outTimeInSeconds = outHours * 3600 + outMinutes * 60 + outSeconds;
- 
-    const diffInSeconds = outTimeInSeconds - inTimeInSeconds;
-     if (diffInSeconds <= 0) {
-            return '00:00:00 hours';
-        }
- 
+    if (!punchInTime || !punchOutTime) {
+        return '00:00:00 hours';
+    }
+
+    const [inHours, inMinutes, inSeconds] = punchInTime.split(':').map(Number);
+    const [outHours, outMinutes, outSeconds] = punchOutTime.split(':').map(Number);
+
+    const inTimeInSeconds = inHours * 3600 + inMinutes * 60 + inSeconds;
+    const outTimeInSeconds = outHours * 3600 + outMinutes * 60 + outSeconds;
+
+    let diffInSeconds = outTimeInSeconds - inTimeInSeconds;
+
+    if (diffInSeconds < 0) {
+        diffInSeconds += 24 * 3600; // Account for overnight shifts
+    }
+
     const diffHours = Math.floor(diffInSeconds / 3600);
     const diffMinutes = Math.floor((diffInSeconds % 3600) / 60);
     const diffSeconds = diffInSeconds % 60;
- 
-     const formattedHours = String(diffHours).padStart(2, '0');
+
+    const formattedHours = String(diffHours).padStart(2, '0');
     const formattedMinutes = String(diffMinutes).padStart(2, '0');
-     const formattedSeconds = String(diffSeconds).padStart(2, '0');
- 
-     return `${formattedHours}:${formattedMinutes}:${formattedSeconds} hours`;
- }
-//Handle 404 error
-  app.get('*', (req, res) => {
-      res.status(404).send("Not found");
-  });
- app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-  });
+    const formattedSeconds = String(diffSeconds).padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds} hours`;
+}
+
+app.get('*', (req, res) => {
+    res.status(404).send("Not found");
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
