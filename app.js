@@ -80,13 +80,13 @@ function getCurrentTime() {
 //When punch-in or punch-out button are pressed, get the current time using the function
 const currentTime = getCurrentTime()
 
-/app.post('/punch-in', async (req, res) => {
+app.post('/punch-in', async (req, res) => {
   const { employeeId, fullName, tasks, currentTime } = req.body;
 
     try {
         const now = new Date();
         const date = now.toLocaleDateString();
-        const punchInTime = getCurrentTime(); // Use the consistent time format
+        const punchInTime = currentTime // Use the consistent time format
 
         const sheetData = await getSheetData();
         const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
