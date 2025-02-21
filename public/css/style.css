@@ -167,7 +167,6 @@ button:hover {
     text-align: center;
     color: var(--text-color);
     margin-top: 50px;
-/*     margin-bottom: 5px; */
     transition: color 0.3s ease;
 }
 .icons {
@@ -179,7 +178,7 @@ button:hover {
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    margin-bottom: 55px;
+    margin-bottom: 45px;
 }
 .icons a {
     text-decoration: none;
