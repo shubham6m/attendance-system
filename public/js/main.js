@@ -32,9 +32,23 @@ document.getElementById('submitPunchIn').addEventListener('click', async ()=>{
   const fullName = document.getElementById('fullName').value;
   const tasks = document.getElementById('tasks').value;
 
-    if(!employeeId || !fullName){
+    if(!employeeId){
       const statusMessageDiv = document.getElementById('statusMessage');
-      statusMessageDiv.textContent = "Employee ID and Full Name are required.";
+      statusMessageDiv.textContent = "Please Enter your Employee ID.";
+      statusMessageDiv.classList.remove('success');
+      statusMessageDiv.classList.add('error');
+      return;
+  }
+    if(!fullName){
+      const statusMessageDiv = document.getElementById('statusMessage');
+      statusMessageDiv.textContent = "Please Enter your Name.";
+      statusMessageDiv.classList.remove('success');
+      statusMessageDiv.classList.add('error');
+      return;
+  }
+    if(!tasks){
+      const statusMessageDiv = document.getElementById('statusMessage');
+      statusMessageDiv.textContent = "Please Enter your task.";
       statusMessageDiv.classList.remove('success');
       statusMessageDiv.classList.add('error');
       return;
@@ -58,7 +72,7 @@ document.getElementById('submitPunchIn').addEventListener('click', async ()=>{
     if(data.success){
        statusMessageDiv.classList.remove('error');
        statusMessageDiv.classList.add('success');
-        document.getElementById("attendanceForm").reset()
+       document.getElementById("attendanceForm").reset()
        // Show initial option
        initialOptionsDiv.classList.remove('hidden');
        employeeFormDiv.classList.add('hidden');
@@ -80,9 +94,23 @@ document.getElementById('submitPunchOut').addEventListener('click', async ()=>{
   const fullName = document.getElementById('fullNameOut').value;
   const finalReport = document.getElementById('finalReport').value;
 
-    if(!employeeId || !fullName){
+    if(!employeeId){
       const statusMessageDiv = document.getElementById('statusMessage');
-      statusMessageDiv.textContent = "Employee ID and Full Name are required.";
+      statusMessageDiv.textContent = "Please Enter your Employee ID.";
+      statusMessageDiv.classList.remove('success');
+      statusMessageDiv.classList.add('error');
+      return;
+  }
+    if(!fullName){
+      const statusMessageDiv = document.getElementById('statusMessage');
+      statusMessageDiv.textContent = "Please Enter your Name.";
+      statusMessageDiv.classList.remove('success');
+      statusMessageDiv.classList.add('error');
+      return;
+  }
+    if(!finalReport){
+      const statusMessageDiv = document.getElementById('statusMessage');
+      statusMessageDiv.textContent = "Please Enter your Report.";
       statusMessageDiv.classList.remove('success');
       statusMessageDiv.classList.add('error');
       return;
