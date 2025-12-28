@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap");
 
 :root {
     --bg-color: #f4f4f4;
@@ -30,7 +31,7 @@ body.dark {
 * {box-sizing: border-box;}
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: var(--bg-color);
   display: flex;
   justify-content: center;
@@ -40,12 +41,18 @@ body {
   min-height: 100vh;
   margin: 0;
   transition: background 0.2s linear;
-   color: var(--text-color);
+  color: var(--text-color);
 }
 
 body.dark {background-color: #292c35;} /* #9b59b6 */
 
 body.dark h1, body.dark .support a {color: #fff;}
+
+/* back button start  */
+
+/*  */
+
+/* .back-btn end  */
 
 .checkbox {
   opacity: 0;
@@ -90,9 +97,22 @@ body.dark h1, body.dark .support a {color: #fff;}
     position: relative;
     transition: background-color 0.3s ease;
 }
-h1,h4 {
+.container h1{
     text-align: center;
-     color: var(--text-color);
+    color: var(--button-hover-color);
+    font-weight: bold;
+    margin: 0;
+}
+
+.container h3{
+    text-align: center;
+    color: var(--text-color);
+    margin: 0;
+}
+
+h4 {
+    text-align: center;
+    color: var(--text-color);
 }
 .form-group {
     margin-bottom: 15px;
@@ -119,7 +139,7 @@ textarea {
     text-align: center;
 }
 button {
-   background-color: var(--button-color);
+    background-color: var(--button-color);
     color: white;
     padding: 10px 15px;
     border: none;
@@ -127,7 +147,10 @@ button {
     cursor: pointer;
     margin: 0 5px;
     transition: background-color 0.3s ease;
+    margin-top: 15px;
 }
+
+
 button:hover {
     background-color: var(--button-hover-color);
 }
@@ -152,6 +175,7 @@ button:hover {
     background-color: var(--message-error-bg);
     color: var(--message-error-text);
 }
+
 /* CSS for new implementation */
 .hidden {
     display: none;
@@ -162,6 +186,7 @@ button:hover {
 .login-options button {
     margin: 0 10px;
 }
+
 /* icon css */
 .liw {
     text-align: center;
@@ -178,7 +203,7 @@ button:hover {
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    margin-bottom: 45px;
+    margin-bottom: 40px;
 }
 .icons a {
     text-decoration: none;
@@ -189,6 +214,7 @@ button:hover {
     height: 30px;
     width: 30px;
     transition: color 0.3s ease;
+    margin-bottom: 15px;
 }
 .icons ion-icon:hover {
     color: var(--button-hover-color);
@@ -196,18 +222,60 @@ button:hover {
 }
 
 /* Responsive styles */
+/* Desktop wide layout */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 900px;   /* increase width */
+        padding: 30px 40px; /* more breathing space */
+    }
+    h1 {
+        white-space: nowrap;
+    }
+    .partner-logos img {
+        max-width: 65px;
+    }
+}
+
 @media screen and (min-width: 768px) {
     /* Tablet and larger screens */
     .container {
         max-width: 500px;
     }
+    .partner-logos img {
+        max-width: 65px;
+    }
 }
 @media screen and (min-width: 992px) {
     /* desktop and larger screens */
     .container {
-        max-width: 600px;
+        max-width: 700px;
+        padding: 30px 40px;
+    }
+    .partner-logos img {
+        max-width: 65px;
+    }
+    h1 {
+        white-space: nowrap;
     }
 }
+@media (max-width: 480px) {
+    /* mobile screens */
+    .partner-logos img {
+        max-width: 55px;
+    }
+}
+
+/* Extra small devices (very small phones) */
+@media (max-width: 360px) {
+    .partner-logos img {
+        max-width: 50px;
+    }
+    #initialOptions {
+        grid-template-columns: 1fr;
+    }
+}
+
+
 /* The switch - the box around the slider */
 .checkbox {
   opacity: 0;
@@ -253,4 +321,30 @@ button:hover {
 
 .checkbox:checked + .checkbox-label .ball {
   transform: translateX(24px);
+}
+
+/* Partner Logos */
+.partner-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.partner-logos a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.partner-logos img {
+    max-width: 70px;
+    height: auto;
+    transition: transform 0.2s ease;
+}
+
+.partner-logos img:hover {
+    transform: scale(1.05);
 }
