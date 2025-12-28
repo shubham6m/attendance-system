@@ -34,7 +34,7 @@ async function getSheetData() {
         const sheetData = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId: SPREADSHEET_ID,
-            range: 'Daily attendance!A1:H' // 🔴 CHANGE
+            range: 'Daily attendance!A1:Z' // 🔴 CHANGE
         });
         return sheetData.data.values || [];
     } catch (error) {
@@ -52,7 +52,7 @@ async function updateSheetData(data) {
         await sheets.spreadsheets.values.append({
             auth,
             spreadsheetId: SPREADSHEET_ID,
-            range: 'Daily attendance!A1:H', // 🔴 CHANGE
+            range: 'Daily attendance!A1:Z', // 🔴 CHANGE
             valueInputOption: 'USER_ENTERED',
             resource: { values: [data] }
         });
@@ -62,6 +62,10 @@ async function updateSheetData(data) {
     }
 }
 
+/* =========================
+   No internal change here
+   Sheet name is passed dynamically
+   ========================= */
 async function updateSheetRow(range, data) {
     try {
         await sheets.spreadsheets.values.update({
@@ -79,124 +83,97 @@ async function updateSheetRow(range, data) {
 
 // Helper functions
 function getCurrentTime() {
-    return new Date().toTimeString().split(' ')[0];
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  return `${hours}:${minutes}:${seconds}`;
 }
 
-function getCurrentDate() {
-    return new Date().toISOString().split('T')[0];
-}
+// function getCurrentDate() {
+//     return new Date().toISOString().split('T')[0];
+// }
+
+//When punch-in or punch-out button are pressed, get the current time using the function
+const currentTime = getCurrentTime()
 
 /* =========================
    Punch In API
    ========================= */
 app.post('/punch-in', async (req, res) => {
-    const { employeeId, fullName, tasks, currentTime } = req.body;
+  const { employeeId, fullName, tasks, currentTime } = req.body;
 
     try {
-        const date = getCurrentDate();
-        const sheetData = await getSheetData();
+        const now = new Date();
+        const date = now.toLocaleDateString();
+        const punchInTime = currentTime // Use the consistent time format
 
-        const existingUser = sheetData.some(
-            row => row[0] === employeeId && row[2] === date
-        );
+        const sheetData = await getSheetData();
+        const existingUser = sheetData.some(row => row[0] === employeeId && row[2] === date);
 
         if (existingUser) {
             return res.json({ success: false, message: 'User already punched in.' });
         }
 
-        await updateSheetData([
-            employeeId,
-            fullName,
-            date,
-            currentTime,
-            "",
-            tasks,
-            "",
-            ""
-        ]);
-
+        await updateSheetData([employeeId, fullName, date, punchInTime, "", tasks]);
         return res.json({ success: true, message: "Punch In Successful" });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: error.message });
+        console.error("Error during punch in.", error);
+        return res.status(500).json({ success: false, message: "Error during punch in. " + error.message })
     }
 });
 
 /* =========================
    Punch Out API
    ========================= */
-app.post('/punch-out', async (req, res) => {
-    const { employeeId, finalReport, currentTime } = req.body;
+app.post("/punch-out", async (req, res) => {
+            const { employeeId, fullName, finalReport, currentTime, timezoneOffset } = req.body;
 
-    try {
-        const date = getCurrentDate();
-        const sheetData = await getSheetData();
+            try {
+                const sheetData = await getSheetData();
+                const userIndex = sheetData.findIndex(row => row[0] === employeeId && row[2] === new Date().toLocaleDateString()); // Ensure date comparison
 
-        const userIndex = sheetData.findIndex(
-            row => row[0] === employeeId && row[2] === date
-        );
+                if (userIndex === -1) {
+                    return res.status(400).json({ success: false, message: "User not logged in." });
+                }
 
-        if (userIndex === -1) {
-            return res.json({ success: false, message: "User not logged in." });
-        }
+                if (sheetData[userIndex][4]) {
+                    return res.status(400).json({ success: false, message: "User has already punched out." });
+                }
 
-        if (sheetData[userIndex][4]) {
-            return res.json({ success: false, message: "User already punched out." });
-        }
+                const punchInTime = sheetData[userIndex][3];
+                const totalHours = calculateHoursWorked(punchInTime, currentTime);
 
-        const punchInTime = sheetData[userIndex][3];
-        const totalHours = calculateHoursWorked(punchInTime, currentTime);
+                // Final Report in Column H
+                await updateSheetRow(`A${userIndex + 1}:H${userIndex + 1}`, [sheetData[userIndex][0], sheetData[userIndex][1], sheetData[userIndex][2], sheetData[userIndex][3], currentTime, sheetData[userIndex][5], totalHours, finalReport]);
 
-        /* =========================
-           🔴 CHANGE 3
-           Correct row number (+2)
-           Prevent duplicate row
-           ========================= */
-        const sheetRowNumber = userIndex + 2; // 🔴 CHANGE
+               return res.json({ success: true, message: "Punch out successful. ", totalHours });
 
-        await updateSheetRow(
-            `Daily attendance!A${sheetRowNumber}:H${sheetRowNumber}`, // 🔴 CHANGE
-            [
-                sheetData[userIndex][0],
-                sheetData[userIndex][1],
-                sheetData[userIndex][2],
-                sheetData[userIndex][3],
-                currentTime,
-                sheetData[userIndex][5],
-                totalHours,
-                finalReport
-            ]
-        );
-
-        return res.json({ success: true, message: "Punch out successful", totalHours });
-
-    } catch (error) {
-        return res.status(500).json({ success: false, message: error.message });
-    }
-});
+            } catch (error) {
+                console.error("Error during punch out.", error);
+                return res.status(500).json({ success: false, message: "Error during punch out. " + error.message });
+            }
+        });
 
 /* =========================
-   🔴 CHANGE 4
-   Suggestion API – Fix time format
+   Suggestion API (Already correct)
    ========================= */
 app.post('/suggestion', async (req, res) => {
     const { employeeId, suggestion } = req.body;
 
     try {
-        const now = new Date(); // 🔴 CHANGE
+        const now = new Date();
+        const date = now.toLocaleDateString();
+        const time = currentTime // Use the consistent time format
 
         await sheets.spreadsheets.values.append({
             auth,
             spreadsheetId: SPREADSHEET_ID,
-            range: 'Suggestions!A1:D',
+            range: 'Suggestions!A1:Z',
             valueInputOption: 'USER_ENTERED',
             resource: {
-                values: [[
-                    employeeId,
-                    suggestion,
-                    now.toISOString().split('T')[0], // Date
-                    now.toISOString()                 // 🔴 Proper DateTime
-                ]]
+                values: [[employeeId, suggestion, date, time]]
             }
         });
 
@@ -207,19 +184,23 @@ app.post('/suggestion', async (req, res) => {
 });
 
 /* =========================
-   Leave API (No change)
+   Leave API (Already correct)
    ========================= */
 app.post('/leave', async (req, res) => {
     const { employeeId, fromDate, toDate, reason } = req.body;
 
     try {
+        const now = new Date();
+        const date = now.toLocaleDateString();
+        const time = currentTime // Use the consistent time format
+
         await sheets.spreadsheets.values.append({
             auth,
             spreadsheetId: SPREADSHEET_ID,
-            range: 'LeaveRequests!A1:E',
+            range: 'LeaveRequests!A1:Z',
             valueInputOption: 'USER_ENTERED',
             resource: {
-                values: [[employeeId, fromDate, toDate, reason, getCurrentDate()]]
+                values: [[employeeId, fromDate, toDate, reason, date, time]]
             }
         });
 
@@ -233,20 +214,36 @@ app.post('/leave', async (req, res) => {
    Hours Calculation
    ========================= */
 function calculateHoursWorked(punchInTime, punchOutTime) {
-    const toSeconds = t => {
-        const [h, m, s] = t.split(':').map(Number);
-        return h * 3600 + m * 60 + s;
-    };
+    if (!punchInTime || !punchOutTime) {
+        return '00:00:00 hours';
+    }
 
-    let diff = toSeconds(punchOutTime) - toSeconds(punchInTime);
-    if (diff < 0) diff += 86400;
+    const [inHours, inMinutes, inSeconds] = punchInTime.split(':').map(Number);
+    const [outHours, outMinutes, outSeconds] = punchOutTime.split(':').map(Number);
 
-    const h = String(Math.floor(diff / 3600)).padStart(2, '0');
-    const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
-    const s = String(diff % 60).padStart(2, '0');
+    const inTimeInSeconds = inHours * 3600 + inMinutes * 60 + inSeconds;
+    const outTimeInSeconds = outHours * 3600 + outMinutes * 60 + outSeconds;
 
-    return `${h}:${m}:${s}`;
+    let diffInSeconds = outTimeInSeconds - inTimeInSeconds;
+
+    if (diffInSeconds < 0) {
+        diffInSeconds += 24 * 3600; // Account for overnight shifts
+    }
+
+    const diffHours = Math.floor(diffInSeconds / 3600);
+    const diffMinutes = Math.floor((diffInSeconds % 3600) / 60);
+    const diffSeconds = diffInSeconds % 60;
+
+    const formattedHours = String(diffHours).padStart(2, '0');
+    const formattedMinutes = String(diffMinutes).padStart(2, '0');
+    const formattedSeconds = String(diffSeconds).padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds} hours`;
 }
+
+app.get('*', (req, res) => {
+    res.status(404).send("Not found");
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
