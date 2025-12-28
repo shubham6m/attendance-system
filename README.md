@@ -2,24 +2,93 @@
 
 ## Description
 
-This is a Node.js-based attendance tracking system that integrates with Google Sheets to record employee punch-in and punch-out times, along with their daily tasks. This system provides a simple and efficient way to manage employee attendance and track their work activities.
+This is a **Node.js–based attendance tracking system** that integrates with **Google Sheets** to record employee punch-in and punch-out times along with their daily tasks, suggestions, and leave requests.
+
+The system provides a simple and efficient way to manage employee attendance **without using a traditional database**.
+
+---
 
 ## Features
-https://github.com/shubham6m/attendance-system/edit/main/README.md
-*   **Employee Login:** Allows employees to log in with their ID and full name.
-*   **Punch In/Out:** Records the time when an employee starts and ends their work.
-*   **Task Tracking:** Allows employees to enter the tasks they are working on.
-*   **Total Hours Worked:** Automatically calculates the total hours worked between punch-in and punch-out.
-*   **Dark Mode:** Offers a dark mode option for improved user experience.
-*   **Data Storage:** Uses Google Sheets to store attendance records.
-  
+
+- **Employee Login**  
+  Employees can log in using their Employee ID and full name.
+
+- **Punch In / Punch Out**  
+  Records the time when an employee starts and ends their work.
+
+- **Task Tracking**  
+  Employees can enter the tasks they worked on during the day.
+
+- **Total Hours Worked**  
+  Automatically calculates total working hours between punch-in and punch-out.
+
+- **Suggestion Box**  
+  Employees can submit suggestions which are stored in Google Sheets.
+
+- **Leave Requests**  
+  Employees can apply for leave with a date range and reason.
+
+- **Dark Mode**  
+  Optional dark mode for improved user experience.
+
+- **Google Sheets Storage**  
+  All attendance data is stored securely in Google Sheets.
+
+---
+
 ## Technologies Used
 
-*   Node.js
-*   Express.js
-*   Google Sheets API
-*   googleapis (Node.js library for Google APIs)
-*   node-fetch (for dynamic import fix)
+- Node.js  
+- Express.js  
+- Google Sheets API  
+- googleapis  
+- node-fetch  
+- HTML, CSS, JavaScript  
+
+---
+
+## Google Sheets Structure
+
+Your Google Spreadsheet must contain **three sheets** with the **exact names** below.
+
+### Daily attendance
+
+| Column | Header |
+|------:|--------|
+| A | Employee ID |
+| B | Name |
+| C | Date |
+| D | Punch In Time |
+| E | Punch Out Time |
+| F | Task |
+| G | Total Hours Worked |
+| H | Final Report |
+
+---
+
+### Suggestions
+
+| Column | Header |
+|------:|--------|
+| A | Employee ID |
+| B | Suggestion |
+| C | Date |
+| D | Time |
+
+---
+
+### LeaveRequests
+
+| Column | Header |
+|------:|--------|
+| A | Employee ID |
+| B | From Date |
+| C | To Date |
+| D | Reason |
+| E | Applied Date |
+| F | Applied Time |
+
+> **Note:** Format Date columns as **Date** and Time columns as **Time** in Google Sheets.
 
 ## Setup
 
