@@ -62,10 +62,6 @@ async function updateSheetData(data) {
     }
 }
 
-/* =========================
-   No internal change here
-   Sheet name is passed dynamically
-   ========================= */
 async function updateSheetRow(range, data) {
     try {
         await sheets.spreadsheets.values.update({
@@ -83,8 +79,7 @@ async function updateSheetRow(range, data) {
 
 // Helper functions
 function getCurrentTime() {
-    const now = new Date();
-    return now.toTimeString().split(' ')[0];
+    return new Date().toTimeString().split(' ')[0];
 }
 
 function getCurrentDate() {
@@ -99,8 +94,8 @@ app.post('/punch-in', async (req, res) => {
 
     try {
         const date = getCurrentDate();
-
         const sheetData = await getSheetData();
+
         const existingUser = sheetData.some(
             row => row[0] === employeeId && row[2] === date
         );
@@ -154,10 +149,13 @@ app.post('/punch-out', async (req, res) => {
 
         /* =========================
            🔴 CHANGE 3
-           Sheet name added in range
+           Correct row number (+2)
+           Prevent duplicate row
            ========================= */
+        const sheetRowNumber = userIndex + 2; // 🔴 CHANGE
+
         await updateSheetRow(
-            `Daily attendance!A${userIndex + 2}:H${userIndex + 2}`, // 🔴 CHANGE
+            `Daily attendance!A${sheetRowNumber}:H${sheetRowNumber}`, // 🔴 CHANGE
             [
                 sheetData[userIndex][0],
                 sheetData[userIndex][1],
@@ -178,19 +176,27 @@ app.post('/punch-out', async (req, res) => {
 });
 
 /* =========================
-   Suggestion API (Already correct)
+   🔴 CHANGE 4
+   Suggestion API – Fix time format
    ========================= */
 app.post('/suggestion', async (req, res) => {
     const { employeeId, suggestion } = req.body;
 
     try {
+        const now = new Date(); // 🔴 CHANGE
+
         await sheets.spreadsheets.values.append({
             auth,
             spreadsheetId: SPREADSHEET_ID,
             range: 'Suggestions!A1:D',
             valueInputOption: 'USER_ENTERED',
             resource: {
-                values: [[employeeId, suggestion, getCurrentDate(), getCurrentTime()]]
+                values: [[
+                    employeeId,
+                    suggestion,
+                    now.toISOString().split('T')[0], // Date
+                    now.toISOString()                 // 🔴 Proper DateTime
+                ]]
             }
         });
 
@@ -201,7 +207,7 @@ app.post('/suggestion', async (req, res) => {
 });
 
 /* =========================
-   Leave API (Already correct)
+   Leave API (No change)
    ========================= */
 app.post('/leave', async (req, res) => {
     const { employeeId, fromDate, toDate, reason } = req.body;
