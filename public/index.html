@@ -19,12 +19,49 @@
    </div>
 
    <div class="container">
-    <h1>Welcome to KPB Supports Solutions</h1>
-    <h4>Employee Attendance System</h4>
+    <h1>WELCOME TO KPB SUPPORTS SOLUTIONS</h1>
+    <h3>STAIR OF SUCCESS...</h3>
+
+    <!-- Partner Logos Section -->
+    <div class="partner-logos">
+        <a href="https://kpbsupportssolutions.com/" target="_current">
+            <img src="./images/partners/kpb-logo.png" alt="KPB logo">
+        </a>
+        <a href="https://emailmyboost.com/" target="_current">
+            <img src="./images/partners/EmailMyBoost-Logo.png" alt="EmailMyBoost-Logo">
+        </a>
+        <a href="https://hunarerp.com/" target="_current">
+            <img src="./images/partners/Hunar-ERP-Logo.png" alt="Hunar-ERP-Logo">
+        </a>
+        <a href="https://startupakumid.com/" target="_current">
+            <img src="./images/partners/StartUp_Ak_Umid_Logo.png" alt="StartUp_Ak_Umid_Logo">
+        </a>
+        <a href="https://leadhai.com/" target="_current">
+            <img src="./images/partners/leadhai-logo.png" alt="leadhai-logo">
+        </a>
+        <a href="https://uiuxwala.com/" target="_current">
+            <img src="./images/partners/UI-UX-Logo.png" alt="UI-UX-Logo">
+        </a>
+        <a href="https://mygiftings.com/" target="_current">
+            <img src="./images/partners/My_Giftings_Logo.png" alt="My_Giftings_Logo">
+        </a>
+    </div>
+
+
+    <h4>EMPLOYEE ATTENDANCE SYSTEM</h4>
+    <!-- <div class="icons">
+        <a href="https://www.linkedin.com/company/kpbsupportssolutions/"><ion-icon name="logo-linkedin"></ion-icon></a>
+        <a href="https://www.facebook.com/people/KPB-Solutions/61552608755485/"><ion-icon name="logo-facebook"></ion-icon></a>
+        <a href="https://www.instagram.com/kpbsupportssolutions/"><ion-icon name="logo-instagram"></ion-icon></a>
+        <a href="https://x.com/Kpbssolutions"><ion-icon name="logo-twitter"></ion-icon></a>
+        <a href="https://www.youtube.com/@KPBSupportsSolutions"><ion-icon name="logo-youtube"></ion-icon></a>
+    </div> -->
 
     <div id="initialOptions">
+        <button id="suggestionBtn">Suggestion</button>
         <button id="punchInBtn">Punch In</button>
         <button id="punchOutBtn">Punch Out</button>
+        <button id="leaveBtn">Leave</button>
     </div>
 
     <div id="employeeForm" class="hidden">
@@ -39,16 +76,17 @@
             <label for="tasks">Today's Tasks:</label>
             <textarea id="tasks" name="tasks" rows="4" cols="50"></textarea><br><br>
 
+            <button type="button" class="back-btn" onclick="goBack()">Back</button>
             <button type="button" id="submitPunchIn">Submit</button>
         </form>
-        <p class="liw">Connect with us </p>
+        <!-- <p class="liw">Connect with us </p>
                 <div class="icons">
                     <a href="https://www.linkedin.com/company/kpbsupportssolutions/"><ion-icon name="logo-linkedin"></ion-icon></a>
                     <a href="https://www.facebook.com/people/KPB-Solutions/61552608755485/"><ion-icon name="logo-facebook"></ion-icon></a>
                     <a href="https://www.instagram.com/kpbsupportssolutions/"><ion-icon name="logo-instagram"></ion-icon></a>
                     <a href="https://x.com/Kpbssolutions"><ion-icon name="logo-twitter"></ion-icon></a>
                     <a href="https://www.youtube.com/@KPBSupportsSolutions"><ion-icon name="logo-youtube"></ion-icon></a>
-                </div>
+                </div> -->
     </div>
 
     <div id="employeeOutForm" class="hidden">
@@ -62,19 +100,46 @@
 
             <label for="finalReport">Report:</label>
             <textarea id="finalReport" name="finalReport" rows="4" cols="50"></textarea><br><br>
-
+            
+            <button type="button" class="back-btn" onclick="goBack()">Back</button>
             <button type="button" id="submitPunchOut">Submit</button>
-        </form>
-        <p class="liw">Connect with us </p>
-                <div class="icons">
-                    <a href="https://www.linkedin.com/company/kpbsupportssolutions/"><ion-icon name="logo-linkedin"></ion-icon></a>
-                    <a href="https://www.facebook.com/people/KPB-Solutions/61552608755485/"><ion-icon name="logo-facebook"></ion-icon></a>
-                    <a href="https://www.instagram.com/kpbsupportssolutions/"><ion-icon name="logo-instagram"></ion-icon></a>
-                    <a href="https://x.com/Kpbssolutions"><ion-icon name="logo-twitter"></ion-icon></a>
-                    <a href="https://www.youtube.com/@KPBSupportsSolutions"><ion-icon name="logo-youtube"></ion-icon></a>
-                </div>
-                
+        </form> 
     </div>
+    <!-- new code ================================  -->
+     <div id="suggestionForm" class="hidden">
+    <h4>Suggestion Box</h4>
+    <form id="suggestionFormData">
+        <label>Employee ID/Name:</label>
+        <input type="text" id="suggestEmployeeId"><br><br>
+
+        <label>Suggestion:</label>
+        <textarea id="suggestionText" rows="4"></textarea><br><br>
+
+        <button type="button" class="back-btn" onclick="goBack()">Back</button>
+        <button type="button" id="submitSuggestion">Submit</button>
+    </form>
+</div>
+
+<div id="leaveForm" class="hidden">
+    <h4>Leave Request</h4>
+    <form id="leaveFormData">
+        <label>Employee ID:</label>
+        <input type="text" id="leaveEmployeeId"><br><br>
+
+        <label>From Date:</label>
+        <input type="date" id="fromDate"><br><br>
+
+        <label>To Date:</label>
+        <input type="date" id="toDate"><br><br>
+
+        <label>Reason:</label>
+        <textarea id="leaveReason" rows="4"></textarea><br><br>
+
+        <button type="button" class="back-btn" onclick="goBack()">Back</button>
+        <button type="button" id="submitLeave">Submit</button>
+    </form>
+</div>
+
 
     <div id="statusMessage" class=""></div>
 </div>
