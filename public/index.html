@@ -6,7 +6,7 @@
     <title>Employee Attendance System</title>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+    <link rel="icon" type="image/png" href="./images/partners/kpb-icon.png">
 </head>
 <body class="light">
   <div style="position:absolute;top:10px;right:10px;">
@@ -48,7 +48,7 @@
     </div>
 
 
-    <h4>EMPLOYEE ATTENDANCE SYSTEM</h4>
+    <!-- <h4>EMPLOYEE ATTENDANCE SYSTEM</h4> -->
     <!-- <div class="icons">
         <a href="https://www.linkedin.com/company/kpbsupportssolutions/"><ion-icon name="logo-linkedin"></ion-icon></a>
         <a href="https://www.facebook.com/people/KPB-Solutions/61552608755485/"><ion-icon name="logo-facebook"></ion-icon></a>
@@ -57,13 +57,17 @@
         <a href="https://www.youtube.com/@KPBSupportsSolutions"><ion-icon name="logo-youtube"></ion-icon></a>
     </div> -->
 
+    <!-- initial options -->
     <div id="initialOptions">
         <button id="suggestionBtn">Suggestion</button>
         <button id="punchInBtn">Punch In</button>
         <button id="punchOutBtn">Punch Out</button>
         <button id="leaveBtn">Leave</button>
+        <button id="calender">Calendar</button>
+        <button id="noticePeriod">Notice Period</button>
     </div>
 
+     <!-- employee punch in form -->
     <div id="employeeForm" class="hidden">
         <h4>Punch In Form</h4>
         <form id="attendanceForm">
@@ -79,16 +83,9 @@
             <button type="button" class="back-btn" onclick="goBack()">Back</button>
             <button type="button" id="submitPunchIn">Submit</button>
         </form>
-        <!-- <p class="liw">Connect with us </p>
-                <div class="icons">
-                    <a href="https://www.linkedin.com/company/kpbsupportssolutions/"><ion-icon name="logo-linkedin"></ion-icon></a>
-                    <a href="https://www.facebook.com/people/KPB-Solutions/61552608755485/"><ion-icon name="logo-facebook"></ion-icon></a>
-                    <a href="https://www.instagram.com/kpbsupportssolutions/"><ion-icon name="logo-instagram"></ion-icon></a>
-                    <a href="https://x.com/Kpbssolutions"><ion-icon name="logo-twitter"></ion-icon></a>
-                    <a href="https://www.youtube.com/@KPBSupportsSolutions"><ion-icon name="logo-youtube"></ion-icon></a>
-                </div> -->
     </div>
 
+    <!-- employee punch out form -->
     <div id="employeeOutForm" class="hidden">
         <h4>Punch Out Form</h4>
         <form id="attendanceOutForm">
@@ -105,42 +102,84 @@
             <button type="button" id="submitPunchOut">Submit</button>
         </form> 
     </div>
-    <!-- new code ================================  -->
-     <div id="suggestionForm" class="hidden">
-    <h4>Suggestion Box</h4>
-    <form id="suggestionFormData">
-        <label>Employee ID/Name:</label>
-        <input type="text" id="suggestEmployeeId"><br><br>
 
-        <label>Suggestion:</label>
-        <textarea id="suggestionText" rows="4"></textarea><br><br>
+    <!-- suggestion form -->
+    <div id="suggestionForm" class="hidden">
+        <h4>Suggestion Box</h4>
+        <form id="suggestionFormData">
+            <label>Employee ID/Name:</label>
+            <input type="text" id="suggestEmployeeId"><br><br>
 
+            <label>Suggestion:</label>
+            <textarea id="suggestionText" rows="4"></textarea><br><br>
+
+            <button type="button" class="back-btn" onclick="goBack()">Back</button>
+            <button type="button" id="submitSuggestion">Submit</button>
+        </form>
+    </div>
+
+    <!-- leave request form --> 
+    <div id="leaveForm" class="hidden">
+        <h4>Leave Request</h4>
+        <form id="leaveFormData">
+            <label>Employee ID:</label>
+            <input type="text" id="leaveEmployeeId"><br><br>
+
+            <label>From Date:</label>
+            <input type="date" id="fromDate"><br><br>
+
+            <label>To Date:</label>
+            <input type="date" id="toDate"><br><br>
+
+            <label>Reason:</label>
+            <textarea id="leaveReason" rows="4"></textarea><br><br>
+
+            <button type="button" class="back-btn" onclick="goBack()">Back</button>
+            <button type="button" id="submitLeave">Submit</button>
+        </form>
+    </div>
+
+    <!-- calender form -->
+    <div id="calenderForm" class="hidden">
+        <h4>Calendar</h4>
+        <div class="dashboard">
+            <!-- Public Leaves -->
+            <div class="card">
+                <div class="card-header">Public Leaves</div>
+                <div id="publicLeaveList"></div>
+            </div>
+            <!-- Optional Leaves -->
+            <div class="card">
+                <div class="card-header">Optional Leaves</div>
+                <div id="optionalLeaveList"></div>
+            </div>
+        </div>
         <button type="button" class="back-btn" onclick="goBack()">Back</button>
-        <button type="button" id="submitSuggestion">Submit</button>
-    </form>
-</div>
+    </div>
 
-<div id="leaveForm" class="hidden">
-    <h4>Leave Request</h4>
-    <form id="leaveFormData">
-        <label>Employee ID:</label>
-        <input type="text" id="leaveEmployeeId"><br><br>
+    <!-- notice period -->
+    <div id="noticePeriodForm" class="hidden">
+    <h4>Notice Period Policy</h4>
 
-        <label>From Date:</label>
-        <input type="date" id="fromDate"><br><br>
-
-        <label>To Date:</label>
-        <input type="date" id="toDate"><br><br>
-
-        <label>Reason:</label>
-        <textarea id="leaveReason" rows="4"></textarea><br><br>
-
+    <div class="notice-card">
+        <div class="notice-table-wrapper">
+            <table class="notice-table">
+                <thead>
+                    <tr>
+                        <th>Tier</th>
+                        <th>Type of Employee</th>
+                        <th class="notice-align">Notice Period</th>
+                    </tr>
+                </thead>
+                <tbody id="noticePeriodList">
+                    <!-- js will populate this section with notice period data -->
+                </tbody>
+            </table>
+        </div>
         <button type="button" class="back-btn" onclick="goBack()">Back</button>
-        <button type="button" id="submitLeave">Submit</button>
-    </form>
-</div>
-
-
+    </div>
+    </div>
+    
     <div id="statusMessage" class=""></div>
 </div>
 

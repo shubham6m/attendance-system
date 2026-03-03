@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leave Dashboard</title>
+
+<style>
+:root {
+  --primary: #2d4a7c;
+  --light-bg: #f3f6fa;
+  --card-bg: #ffffff;
+  --text-dark: #1e293b;
+  --text-light: #6b7280;
+  --border: #e2e8f0;
+
+  --date-bg: #b9d8d6;
+  --badge-bg: #e8dfc8;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  background: var(--light-bg);
+  padding: 20px;
+}
+
+/* Layout */
+.dashboard {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Card */
+.card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.card-header {
+  background: var(--primary);
+  color: white;
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* ---------- Birthday Styling ---------- */
+
+.list {
+  list-style: none;
+}
+
+.list-item {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-dark);
+}
+
+.role {
+  font-size: 13px;
+  color: #3b82f6;
+  margin-top: 4px;
+}
+
+.date {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+/* ---------- Leave Styled Layout ---------- */
+
+.leave-item {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.leave-item:last-child {
+  border-bottom: none;
+}
+
+.date-box {
+  background: var(--date-bg);
+  border-radius: 10px;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  color: #2b4a4a;
+}
+
+.month {
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.day {
+  font-size: 22px;
+}
+
+.leave-content {
+  flex: 1;
+}
+
+.leave-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-dark);
+}
+
+.leave-day {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 6px;
+  background: var(--badge-bg);
+  font-weight: 600;
+  color: #6b5c3b;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .card-header {
+    text-align: center;
+  }
+
+  .date-box {
+    width: 60px;
+    height: 60px;
+  }
+
+  .day {
+    font-size: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+  <!-- Upcoming Birthdays -->
+  <div class="card">
+    <div class="card-header">Upcoming Birthdays</div>
+    <ul class="list" id="birthdayList"></ul>
+  </div>
+
+  <!-- Optional Leaves -->
+  <div class="card">
+    <div class="card-header">Optional Leaves</div>
+    <div id="leaveList"></div>
+  </div>
+
+</div>
+
+<script>
+const birthdays = [
+  { name: "Jayesh Akolnekar", role: "Salesforce Developer", date: "1996-03-05" },
+  { name: "Ankita Shendre", role: "Graphic Designer Intern", date: "1999-03-26" },
+  { name: "Ashtmi", role: "Salesforce Techno Functional Consultant", date: "2003-04-01" },
+  { name: "Kapil Sharma", role: "Salesforce Developer", date: "1998-04-05" }
+];
+
+const leaves = [
+  { name: "MUHARRAM (ASHURA)", date: "2026-06-26", type: "FLOATER LEAVE" },
+  { name: "Gudi Padwa", date: "2026-03-19", type: "OPTIONAL LEAVE" }
+];
+
+function formatBirthday(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit'
+  });
+}
+
+function formatLeave(dateStr) {
+  const date = new Date(dateStr);
+  return {
+    month: date.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
+    day: date.getDate(),
+    weekday: date.toLocaleString('en-US', { weekday: 'long' })
+  };
+}
+
+function renderBirthdays() {
+  const list = document.getElementById("birthdayList");
+  birthdays.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "list-item";
+    li.innerHTML = `
+      <div class="name">${item.name}</div>
+      <div class="role">${item.role}</div>
+      <div class="date">${formatBirthday(item.date)}</div>
+    `;
+    list.appendChild(li);
+  });
+}
+
+function renderLeaves() {
+  const container = document.getElementById("leaveList");
+  leaves.forEach(item => {
+    const { month, day, weekday } = formatLeave(item.date);
+
+    const div = document.createElement("div");
+    div.className = "leave-item";
+
+    div.innerHTML = `
+      <div class="date-box">
+        <div class="month">${month}</div>
+        <div class="day">${day}</div>
+      </div>
+      <div class="leave-content">
+        <div class="leave-title">${item.name}</div>
+        <div class="leave-day">${weekday}</div>
+        <div class="badge">${item.type}</div>
+      </div>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+renderBirthdays();
+renderLeaves();
+</script>
+
+</body>
+</html>
